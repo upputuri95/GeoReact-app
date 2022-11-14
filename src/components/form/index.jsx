@@ -19,7 +19,6 @@ const Form = () => {
   const [result, setResult] = useState(null);
   const [oneLineaddress, setAddress] = useState("");
   const [open, setOpen] = useState(false);
-  const [showError, setShowError] = useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -40,6 +39,9 @@ const Form = () => {
       )
       .then((response) => {
         setResult(response.data);
+        setOpen(false);
+      })
+      .catch((e) => {
         setOpen(false);
       });
   };
@@ -71,8 +73,6 @@ const Form = () => {
       }
     }
   }, [result]);
-
-  console.log("quadrant", quadrant);
 
   const quadrantColor = useMemo(() => {
     switch (quadrant) {
@@ -137,7 +137,11 @@ const Form = () => {
 
         {quadrant === "error" ? (
           <Typography component="h1" variant="h5" className="error">
-            <i> Please enter valid details</i>
+            <i>
+              {result.result.addressMatches.length === 0
+                ? "NO matches found."
+                : "Please enter valid details"}
+            </i>
           </Typography>
         ) : null}
       </Box>
